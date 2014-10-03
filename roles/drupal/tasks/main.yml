@@ -1,0 +1,35 @@
+- name: Check out Drush master branch
+  git: repo=https://github.com/drush-ops/drush.git dest=/usr/share/php/drush
+
+- name: Install drush dependencies
+  command: composer install -d /usr/share/php/drush
+
+- name: Create a symbolic link to the Drush executable
+  file: src=/usr/share/php/drush/drush dest=/usr/bin/drush state=link
+
+- name: Create .drush directory
+  file: path=/home/vagrant/.drush state=directory owner=vagrant group=vagrant mode=0700
+
+- name: Enable drush completion
+  copy: src=drush.complete.sh dest=/etc/bash_completion.d/
+
+- name: Download coder
+  command: drush dl coder --destination=/tmp
+
+- name: Copy drupal coding standards
+  shell: cp -R /tmp/coder/coder_sniffer/Drupal $(pear config-get php_dir)/PHP/CodeSniffer/Standards
+
+- name: Install drupalcs drush command
+  shell: cp /tmp/coder/coder_sniffer/drupalcs.drush.inc /home/vagrant/.drush/
+
+- name: Install DrupalDebug.php
+  copy: src=DrupalDebug.php dest=/usr/share/php/DrupalDebug.php owner=root group=root mode=0644
+
+- name: Copy drupal-install script
+  template: src=drupal-install dest=/usr/bin/drupal-install owner=root group=root mode=0755
+
+- name: Install drupal 7
+  shell: (cd /var/www && drupal-install d7)
+
+- name: Install drupal 8
+  shell: (cd /var/www && drupal-install d8)

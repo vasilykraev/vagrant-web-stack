@@ -1,0 +1,44 @@
+#! /bin/bash
+
+DB_USER=root
+DB_PASS={{mysql_root_pass}}
+ACCOUNT_NAME={{drupal_user}}
+ACCOUNT_PASS={{drupal_pass}}
+
+##############################
+
+if [ -z $1 ]; then
+  echo 'Site directory is required!'
+  exit 1;
+fi
+
+if [ $1 = "d7" ]; then
+  D7=true
+fi
+
+echo 'Download Drupal core';
+if [ $D7 ]; then
+  drush dl drupal-7 --drupal-project-rename=$1 -y
+else
+  drush dl drupal-8 --drupal-project-rename=$1 -y
+fi
+cd $1
+
+echo 'Start installation';
+drush site-install standard --db-url=mysql://$DB_USER:$DB_PASS@localhost/$1 --site-name=$1 --account-mail=admin@localhost.my --account-name=$ACCOUNT_NAME --account-pass=$ACCOUNT_PASS -y
+chmod -R 777 sites/default/files
+
+if [ $D7 ]; then
+  echo 'Install & enable useful modules'
+  drush dl views ctools token pathauto libraries admin_menu entity rules module_filter devel diff features -y
+  drush en views views_ui token libraries admin_menu admin_menu_toolbar entity rules rules_admin module_filter diff -y
+  echo 'Uninstall some modules'
+  drush dis toolbar contextual dashboard overlay rdf shortcut update search comment color -y
+  drush pm-uninstall toolbar contextual dashboard overlay rdf shortcut update search comment color -y
+else
+  echo 'Install & enable useful modules'
+  drush dl libraries rules devel -y
+  drush en libraries rules rules_admin -y
+fi
+
+drush cron

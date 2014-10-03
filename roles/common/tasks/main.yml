@@ -1,0 +1,20 @@
+- name: Install utils and soft
+  apt: name={{item}} state=present
+  with_items:
+    - curl
+    - git
+    - htop
+    - mc
+    - sqlite3
+    - unzip
+    - vim
+    - zip
+    - zsh
+
+- name: Install dot files
+  copy: src={{item}} dest=/home/vagrant/.{{item}}
+  with_items:
+    - bashrc
+    - zshrc
+    - gitconfig
+    - gitignore

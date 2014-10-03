@@ -1,0 +1,17 @@
+server_name: sandbox
+
+mysql_root_pass: pass
+postgres_user: user1
+postgres_pass: pass
+postgres_db: test
+
+drupal_user: admin
+drupal_pass: 123456
+
+# Directory where outgoing emails will be stored.
+mail_dir: /var/log/mail
+
+# IP address of your host system, need to remote XDebug connect back & postgres access
+base_ip: 10.0.0.1
+
+xdebug_idkey: phpstorm

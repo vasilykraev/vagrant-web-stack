@@ -1,0 +1,50 @@
+- name: Install required components
+  apt: name={{item}} state=installed
+  with_items:
+   - apache2
+   - mysql-server
+   - python-mysqldb
+   - php5
+   - php5-mysql
+   - php5-curl
+   - php5-intl
+   - php5-dev
+   - php5-mcrypt
+   - php5-gd
+   - php-apc
+   - php-pear
+   - php5-sqlite
+
+- name: Enable mod rewrite
+  command: a2enmod rewrite
+
+- name: Remove index.html from document root
+  file: path=/var/www/index.html state=absent
+
+- name: Create phpinfo.php file
+  shell: echo '<?php phpinfo();' > /var/www/phpinfo.php
+
+- name: Set mysql root password
+  command: mysqladmin -u root password {{mysql_root_pass}}
+  ignore_errors: true
+
+- name: Replace default virual host
+  template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.conf owner=root group=root mode=0644
+
+- name: Tweak apache settings.
+  template: src=tweak.conf dest=/etc/apache2/conf-available/tweak.conf owner=root group=root mode=0644
+
+- name: Sendmail script
+  template: src=sendmail.php.j2 dest=/usr/share/php/sendmail.php owner=root group=root mode=0644
+
+- name: Create mail directory
+  file: path={{mail_dir}} state=directory owner=root group=root mode=0777
+
+- name: Set APC config
+  template: src=apc.ini.j2 dest=/etc/php5/mods-available/apc.ini owner=root group=root mode=0644
+
+- name: Tweak php settings
+  copy: src=tweak.ini dest=/etc/php5/apache2/conf.d/tweak.ini owner=root group=root mode=644
+
+- name: Fixed missing php zlib functions
+  copy: src=Tar.php dest=/usr/share/php/Archive/Tar.php owner=root group=root mode=0644

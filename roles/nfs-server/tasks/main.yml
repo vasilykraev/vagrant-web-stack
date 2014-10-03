@@ -1,0 +1,9 @@
+- name: Install required components
+  apt: name={{item}} state=present
+  with_items:
+    - nfs-kernel-server
+    - nfs-common
+
+- name: Share document root
+  shell: echo "/var/www *(rw,no_root_squash,async,no_subtree_check)" >> /etc/exports
+  notify: restart nfs-kernel-server

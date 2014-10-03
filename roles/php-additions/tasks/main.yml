@@ -1,0 +1,16 @@
+- name: Pear benchmark
+  shell: pear list -a Benchmark | grep Benchmark || pear install Benchmark
+  ignore_errors: True
+
+- name: PHP_codeSniffer
+  shell: pear list -a PHP_CodeSniffer | grep PHP_CodeSniffer || pear install PHP_CodeSniffer
+  ignore_errors: True
+
+- name: Fire PHP
+  shell: pear list -a | grep FirePHPCore || pear channel-discover pear.firephp.org || pear install firephp/FirePHPCore
+
+- name: Composer
+  shell: curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+
+- name: Kint
+  git: repo=git://github.com/raveren/kint.git dest=/usr/share/php/kint

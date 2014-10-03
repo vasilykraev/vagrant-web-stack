@@ -1,0 +1,26 @@
+- hosts: all
+
+  vars_files:
+  - parameters.yml
+
+  pre_tasks:
+  - name: Update apt cache if needed.
+    apt: upgrade=yes update_cache=yes cache_valid_time=3600
+  - name: Generate and update locale
+    shell: locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 && dpkg-reconfigure locales
+
+  post_tasks:
+  - name: Change files owner on document root
+    file: path=/var/www owner=vagrant group=vagrant recurse=yes
+
+  - name: Change shell to zsh
+    shell: chsh -s /usr/bin/zsh
+
+  roles:
+    - common
+    - amp
+    - php-additions
+    - xdebug
+    - nfs-server
+    - web-db-tools
+    - drupal

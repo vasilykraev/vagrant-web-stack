@@ -1,0 +1,53 @@
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+log/*
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+db/schema.rb
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon
+ehthumbs.db
+Thumbs.db
+tmp/*
+
+# IDE #
+######################
+/.settings
+/.project
+/.idea
+
+# Drupal #
+######################
+# Ignore configuration files that may contain sensitive information.
+sites/*/settings*.php
+
+# Ignore paths that contain user-generated content.
+sites/*/files
+sites/*/private
+
+# Devel modules
+sites/all/libraries/simplehtmldom
+sites/all/modules/contrib/devel_themer
+sites/all/modules/contrib/simplehtmldom

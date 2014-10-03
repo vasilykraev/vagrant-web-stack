@@ -1,0 +1,5 @@
+- name: Download Adminer
+  get_url: url=http://www.adminer.org/latest.php dest=/var/www/adminer.php mode=0644
+
+- name: Download Sypex Dumper
+  shell: cd /var/www; wget https://sypex.net/files/SypexDumper_2011.zip -O sypex.zip; unzip -o sypex.zip; rm sypex.zip;

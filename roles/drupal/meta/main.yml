@@ -1,0 +1,4 @@
+dependencies:
+  - { role: common}
+  - { role: amp}
+  - { role: php-additions} # Drush depends on Composer
